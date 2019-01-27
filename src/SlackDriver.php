@@ -291,7 +291,7 @@ class SlackDriver extends HttpDriver implements VerifiesService
         $payload = [
             'trigger_id' => $this->payload->get('trigger_id'),
             'channel' => $matchingMessage->getRecipient() === '' ? $matchingMessage->getSender() : $matchingMessage->getRecipient(),
-            'token' => $this->config->get('token'),
+            'token' => $this->pickToken($matchingMessage),
             'dialog' => json_encode($dialog->toArray()),
         ];
 
@@ -343,7 +343,7 @@ class SlackDriver extends HttpDriver implements VerifiesService
     {
         $parameters = array_replace_recursive([
             'as_user' => true,
-            'token' => $this->payload->get('token'),
+            'token' => $this->pickToken($matchingMessage),
             'channel' => $matchingMessage->getRecipient() === '' ? $matchingMessage->getSender() : $matchingMessage->getRecipient(),
         ], $additionalParameters);
 
@@ -369,8 +369,6 @@ class SlackDriver extends HttpDriver implements VerifiesService
         } else {
             $parameters['text'] = $message;
         }
-
-        $parameters['token'] = $this->config->get('token');
 
         return $parameters;
     }
@@ -489,4 +487,9 @@ class SlackDriver extends HttpDriver implements VerifiesService
             return $response;
         });
     }
+
+    protected function pickToken() {
+        return $this->getPayload()->get('token') ?? $this->config->get('token');
+    }
+
 }
