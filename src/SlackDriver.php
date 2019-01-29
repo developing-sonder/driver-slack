@@ -492,6 +492,7 @@ class SlackDriver extends HttpDriver implements VerifiesService
      * @return mixed
      */
     protected function pickToken() {
+        Log::info(print_r($this->payload, true));
         return $this->payload->get('token') ?? $this->config->get('token');
     }
 
