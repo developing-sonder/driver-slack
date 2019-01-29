@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 use BotMan\BotMan\Messages\Conversations\Conversation;
+use Illuminate\Support\Facades\Log;
 
 class SlackDriver extends HttpDriver implements VerifiesService
 {
@@ -67,6 +68,8 @@ class SlackDriver extends HttpDriver implements VerifiesService
             $this->payload = $request->request;
             $this->event = Collection::make($request->request->all());
         } else {
+            Log::info("Bot!");
+            Log::info($request->getContent());
             $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
             $this->event = Collection::make($this->payload->get('event'));
             if (! empty($this->config['token']) && empty($this->botID)) {
