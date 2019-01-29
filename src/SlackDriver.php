@@ -54,6 +54,8 @@ class SlackDriver extends HttpDriver implements VerifiesService
          * we're dealing with an interactive button response.
          */
         if (! is_null($request->get('payload'))) {
+            Log::info("Payload: ");
+            Log::info($request->get('payload'));
             $payloadData = json_decode($request->get('payload'), true);
 
             $this->payload = Collection::make($payloadData);
